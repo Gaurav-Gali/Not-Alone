@@ -12,14 +12,11 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
 export default function Landing() {
-    const router = useRouter();
     const { isSignedIn, isLoaded } = useUser();
-
+    const router = useRouter();
     useEffect(() => {
         if (isSignedIn) router.push("/feed");
     }, [isSignedIn, isLoaded]);
-
-    
 
     return (
         <div className="flex flex-col min-h-screen">
