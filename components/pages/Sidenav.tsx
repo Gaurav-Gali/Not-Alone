@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { House, Newspaper, Bot, Download, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { SignOutButton } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 type sideLinksType = {
     label: string;
@@ -16,6 +17,8 @@ type sideLinksType = {
 
 const Sidenav = () => {
     const { user } = useUser();
+    const pathname = usePathname();
+
     const [sideLinks, setSideLinks] = useState<sideLinksType[]>([
         {
             label: "Feed",
@@ -49,6 +52,20 @@ const Sidenav = () => {
         },
     ]);
 
+    useEffect(() => {
+        function updatePath() {
+            for (let i = 0; i < sideLinks.length; i++) {
+                if (sideLinks[i].url === pathname) {
+                    sideLinks[i].selected = true;
+                } else {
+                    sideLinks[i].selected = false;
+                }
+            }
+            setSideLinks([...sideLinks]);
+        }
+        updatePath();
+    }, []);
+
     const renderSideLinks = (index: number) => {
         for (let i = 0; i < sideLinks.length; i++) {
             if (i === index) {
@@ -79,15 +96,20 @@ const Sidenav = () => {
             <nav className="bg-white rounded-lg border border-neutral-50 flex flex-col gap-3 p-3">
                 {sideLinks.map((link, index) => (
                     <Link
-                        className={`flex items-center border border-white justify-between gap-3 py-2 px-5 rounded-lg hover:bg-gray-50 ${
-                            link.selected &&
-                            "bg-gray-50 border border-dashed border-gray-300"
+                        className={`flex items-center justify-between gap-3 py-2 px-5 rounded-lg hover:bg-gray-50 ${
+                            link.selected
+                                ? "bg-gray-50 border border-dashed border-gray-300"
+                                : "border border-white"
                         }`}
                         key={index}
                         href={link.url}
                         onClick={() => renderSideLinks(index)}
                     >
-                        <div className="flex items-center text-gray-600 justify-center gap-3">
+                        <div
+                            className={
+                                "flex items-center text-gray-600 justify-center gap-3"
+                            }
+                        >
                             <span>{link.icon}</span>
                             <span>{link.label}</span>
                         </div>
