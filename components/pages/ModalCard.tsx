@@ -12,6 +12,9 @@ import {
 
 import Image from "next/image";
 
+import { Heart } from "lucide-react";
+import CommentBox from "./CommentBox";
+
 export default function ModalCard({
     children,
     image,
@@ -73,11 +76,21 @@ export default function ModalCard({
                                     </p>
                                 </div>
                                 {/* Likes and comments */}
-                                <div></div>
+                                <div className="flex items-center justify-between m-1 mt-3">
+                                    <span className="flex gap-2 text-md text-pink-600 items-center">
+                                        <Heart size={17} />
+                                        <p>10K</p>
+                                    </span>
+                                    <span className="flex gap-2 text-md text-gray-500 items-center">
+                                        <p>Comments</p>
+                                        <p>10K</p>
+                                    </span>
+                                </div>
                             </div>
                         </DialogDescription>
-                        <DialogFooter className="px-6 pb-6 sm:justify-start">
-                            hello
+                        <DialogFooter className="w-full border-0 border-t-[1px] border-t-gray-100 px-6 pt-6 pb-6 sm:justify-start">
+                            {/* Comments */}
+                            <CommentBox />
                         </DialogFooter>
                     </div>
                 </DialogHeader>

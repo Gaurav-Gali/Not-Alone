@@ -13,7 +13,7 @@ import {
     BadgePlus,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useClerk } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 
 type sideLinksType = {
@@ -26,6 +26,7 @@ type sideLinksType = {
 const Sidenav = () => {
     const { user } = useUser();
     const pathname = usePathname();
+    const { openUserProfile } = useClerk();
 
     const [sideLinks, setSideLinks] = useState<sideLinksType[]>([
         {
@@ -60,23 +61,25 @@ const Sidenav = () => {
         },
         {
             label: "Settings",
-            url: "/settings",
+            url: "",
             icon: <Settings className="w-5 text-gray-300" />,
             selected: false,
         },
     ]);
 
-    useEffect(() => {
-        function updatePath() {
-            for (let i = 0; i < sideLinks.length; i++) {
-                if (sideLinks[i].url === pathname) {
-                    sideLinks[i].selected = true;
-                } else {
-                    sideLinks[i].selected = false;
-                }
+    // Updates the side nav link to the current page
+    function updatePath() {
+        for (let i = 0; i < sideLinks.length; i++) {
+            if (sideLinks[i].url === pathname) {
+                sideLinks[i].selected = true;
+            } else {
+                sideLinks[i].selected = false;
             }
-            setSideLinks([...sideLinks]);
         }
+        setSideLinks([...sideLinks]);
+    }
+
+    useEffect(() => {
         updatePath();
     }, []);
 
@@ -87,6 +90,12 @@ const Sidenav = () => {
             } else {
                 sideLinks[i].selected = false;
             }
+        }
+        // Showing the user profile modal when the settings link is selected
+        if (sideLinks[sideLinks.length - 1].selected) {
+            updatePath();
+            sideLinks[sideLinks.length - 1].selected = false;
+            openUserProfile();
         }
         setSideLinks([...sideLinks]);
     };
