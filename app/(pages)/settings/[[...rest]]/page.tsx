@@ -3,7 +3,7 @@ import { UserProfile } from "@clerk/nextjs";
 
 const Settings = () => {
     return (
-        <div className="flex h-screen pt-5">
+        <div className="">
             <UserProfile />
         </div>
     );

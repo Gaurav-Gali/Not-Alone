@@ -3,7 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { House, Newspaper, Bot, Download, Settings } from "lucide-react";
+import {
+    House,
+    Newspaper,
+    Bot,
+    Download,
+    Settings,
+    ArrowLeft,
+    BadgePlus,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { SignOutButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
@@ -30,6 +38,12 @@ const Sidenav = () => {
             label: "News",
             url: "/news",
             icon: <Newspaper className="w-5 text-gray-300" />,
+            selected: false,
+        },
+        {
+            label: "Create",
+            url: "/create",
+            icon: <BadgePlus className="w-5 text-gray-300" />,
             selected: false,
         },
         {
@@ -119,6 +133,7 @@ const Sidenav = () => {
             {/* Footer */}
             <SignOutButton>
                 <Button className="w-full py-5 rounded-lg hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500">
+                    {/* <ArrowLeft /> */}
                     Logout
                 </Button>
             </SignOutButton>
