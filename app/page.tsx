@@ -16,7 +16,7 @@ export default function Landing() {
     const router = useRouter();
     useEffect(() => {
         if (isSignedIn) router.push("/feed");
-    }, [isSignedIn, isLoaded]);
+    }, [isSignedIn, isLoaded, router]);
 
     return (
         <div className="flex flex-col min-h-screen">

@@ -2,7 +2,7 @@ import Sidenav from "@/components/pages/Sidenav";
 import LoadingComp from "@/components/LoadingComp";
 import type { Metadata } from "next";
 import SearchBar from "@/components/pages/SearchBar";
-import CreateModal from "@/components/pages/CreateModal";
+// import CreateModal from "@/components/pages/CreateModal";
 
 export const metadata: Metadata = {
     title: "Not Alone",

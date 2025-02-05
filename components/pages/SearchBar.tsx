@@ -2,19 +2,35 @@
 
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { LoaderCircle, Mic, Search } from "lucide-react";
+import { LoaderCircle, Mic, Search, BadgePlus } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
+import CreateModal from "./CreateModal";
 
 const SearchBar = () => {
     const id = useId();
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const pathname = usePathname();
+
+    const routesNoSearch = ["/settings", "/settings/security"];
+    const searchHidden: boolean = routesNoSearch.includes(pathname);
+
+    useEffect(() => {
+        if (inputValue) {
+            setIsLoading(true);
+            const timer = setTimeout(() => {
+                setIsLoading(false);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+        setIsLoading(false);
+    }, [inputValue]);
 
     return (
-        <div className="space-y-2 pr-7">
-            <div className="relative">
+        <div className={"flex gap-3 items-center pr-7"}>
+            <div className="relative flex-1">
                 <Input
                     id={id}
                     className="peer pe-9 ps-9 h-10 text-gray-600 rounded-full shadow-none border focus-visible:ring-1 focus-visible:ring-gray-300"
@@ -44,6 +60,11 @@ const SearchBar = () => {
                     <Mic size={16} strokeWidth={2} aria-hidden="true" />
                 </button>
             </div>
+            <CreateModal>
+                <Button className="w-full flex gap-1 items-center py-3 rounded-full hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500">
+                    <BadgePlus className="w-4" /> Create
+                </Button>
+            </CreateModal>
         </div>
     );
 };

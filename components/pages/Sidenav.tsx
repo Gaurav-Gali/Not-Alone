@@ -43,12 +43,6 @@ const Sidenav = () => {
             selected: false,
         },
         {
-            label: "Create",
-            url: "",
-            icon: <BadgePlus className="w-5 text-gray-300" />,
-            selected: false,
-        },
-        {
             label: "Assistant",
             url: "/assistant",
             icon: <Bot className="w-5 text-gray-300" />,
@@ -98,11 +92,6 @@ const Sidenav = () => {
             sideLinks[sideLinks.length - 1].selected = false;
             openUserProfile();
         }
-
-        if (sideLinks[2].selected) {
-            updatePath();
-            sideLinks[2].selected = false;
-        }
         setSideLinks([...sideLinks]);
     };
     return (
@@ -134,27 +123,14 @@ const Sidenav = () => {
                         href={link.url}
                         onClick={() => renderSideLinks(index)}
                     >
-                        {link.label === "Create" ? (
-                            <CreateModal userImage={`${user?.imageUrl}`}>
-                                <div
-                                    className={
-                                        "flex items-center text-gray-600 w-48 justify-start gap-3"
-                                    }
-                                >
-                                    <span>{link.icon}</span>
-                                    <span>{link.label}</span>
-                                </div>
-                            </CreateModal>
-                        ) : (
-                            <div
-                                className={
-                                    "flex items-center text-gray-600 justify-center gap-3"
-                                }
-                            >
-                                <span>{link.icon}</span>
-                                <span>{link.label}</span>
-                            </div>
-                        )}
+                        <div
+                            className={
+                                "flex items-center text-gray-600 justify-center gap-3"
+                            }
+                        >
+                            <span>{link.icon}</span>
+                            <span>{link.label}</span>
+                        </div>
                     </Link>
                 ))}
             </nav>
