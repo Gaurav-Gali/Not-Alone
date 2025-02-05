@@ -10,7 +10,8 @@ import {
     Download,
     Settings,
     ArrowLeft,
-    BadgePlus,
+    ChevronRight,
+    ChevronLeft,
 } from "lucide-react";
 import CreateModal from "./CreateModal";
 import { Button } from "../ui/button";
@@ -28,6 +29,7 @@ const Sidenav = () => {
     const { user } = useUser();
     const pathname = usePathname();
     const { openUserProfile } = useClerk();
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     const [sideLinks, setSideLinks] = useState<sideLinksType[]>([
         {
@@ -62,59 +64,88 @@ const Sidenav = () => {
         },
     ]);
 
-    // Updates the side nav link to the current page
+    useEffect(() => {
+        const handleResize = () => {
+            setIsCollapsed(window.innerWidth < 640);
+        };
+
+        // Initial check
+        handleResize();
+
+        // Add event listener
+        window.addEventListener("resize", handleResize);
+
+        // Cleanup
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     function updatePath() {
-        for (let i = 0; i < sideLinks.length; i++) {
-            if (sideLinks[i].url === pathname) {
-                sideLinks[i].selected = true;
-            } else {
-                sideLinks[i].selected = false;
-            }
-        }
-        setSideLinks([...sideLinks]);
+        const updatedLinks = sideLinks.map((link) => ({
+            ...link,
+            selected: link.url === pathname,
+        }));
+        setSideLinks(updatedLinks);
     }
 
     useEffect(() => {
         updatePath();
-    }, []);
+    }, [pathname]);
 
     const renderSideLinks = (index: number) => {
-        for (let i = 0; i < sideLinks.length; i++) {
-            if (i === index) {
-                sideLinks[i].selected = true;
-            } else {
-                sideLinks[i].selected = false;
-            }
-        }
-        // Showing the user profile modal when the settings link is selected
-        if (sideLinks[sideLinks.length - 1].selected) {
+        const updatedLinks = sideLinks.map((link, i) => ({
+            ...link,
+            selected: i === index,
+        }));
+
+        if (updatedLinks[updatedLinks.length - 1].selected) {
             updatePath();
-            sideLinks[sideLinks.length - 1].selected = false;
             openUserProfile();
+            return;
         }
-        setSideLinks([...sideLinks]);
+
+        setSideLinks(updatedLinks);
     };
+
     return (
-        <aside className="flex flex-col gap-5 w-72 h-screen p-7 pt-5">
+        <aside
+            className={`flex flex-col gap-5 h-screen p-7 pt-5 transition-all duration-300 ${
+                isCollapsed ? "w-28" : "w-72"
+            }`}
+        >
             {/* Name Card */}
-            <div className="bg-white rounded-xl border border-neutral-50 p-3 px-5 flex items-center justify-start gap-3">
+            <div
+                className={`bg-white rounded-xl border border-neutral-50 p-3 ${
+                    isCollapsed ? "p-1 justify-center" : "px-5 justify-start"
+                } flex items-center  gap-3`}
+            >
                 <Image
-                    className="w-10 h-10 aspect-square rounded-lg"
+                    className="w-10 h-10 aspect-square rounded-lg flex-shrink-0"
                     src={`${user?.imageUrl}`}
                     width={50}
                     height={50}
                     alt="Avatar"
                 />
-                <span className="flex flex-col items-start overflow-hidden">
-                    <h1 className="text-sm font-medium">{user?.fullName}</h1>
-                    <p className="text-xs text-gray-500">You're not alone</p>
-                </span>
+                {!isCollapsed && (
+                    <span className="flex flex-col items-start overflow-hidden">
+                        <h1 className="text-sm font-medium">
+                            {user?.fullName}
+                        </h1>
+                        <p className="text-xs text-gray-500">
+                            You're not alone
+                        </p>
+                    </span>
+                )}
             </div>
-            {/* Navigation  */}
+
+            {/* Navigation */}
             <nav className="bg-white rounded-lg border border-neutral-50 flex flex-col gap-3 p-3">
                 {sideLinks.map((link, index) => (
                     <Link
-                        className={`flex items-center justify-between gap-3 py-2 px-5 rounded-lg hover:bg-gray-50 ${
+                        className={`flex items-center ${
+                            isCollapsed ? "justify-center" : "justify-between"
+                        } gap-3 py-2 ${
+                            isCollapsed ? "px-2" : "px-5"
+                        } rounded-lg hover:bg-gray-50 ${
                             link.selected
                                 ? "bg-gray-50 border border-dashed border-gray-300"
                                 : "border border-white"
@@ -123,22 +154,22 @@ const Sidenav = () => {
                         href={link.url}
                         onClick={() => renderSideLinks(index)}
                     >
-                        <div
-                            className={
-                                "flex items-center text-gray-600 justify-center gap-3"
-                            }
-                        >
+                        <div className="flex items-center text-gray-600 justify-center gap-3">
                             <span>{link.icon}</span>
-                            <span>{link.label}</span>
+                            {!isCollapsed && <span>{link.label}</span>}
                         </div>
                     </Link>
                 ))}
             </nav>
+
             {/* Footer */}
             <SignOutButton>
-                <Button className="w-full py-5 rounded-lg hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500">
-                    {/* <ArrowLeft /> */}
-                    Logout
+                <Button
+                    className={`w-full py-5 rounded-lg hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500 ${
+                        isCollapsed ? "px-5" : "px-5"
+                    }`}
+                >
+                    {isCollapsed ? <ArrowLeft className="w-5 h-5" /> : "Logout"}
                 </Button>
             </SignOutButton>
         </aside>
