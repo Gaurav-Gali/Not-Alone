@@ -12,7 +12,7 @@ import {
 
 import Image from "next/image";
 
-import { Heart } from "lucide-react";
+import { Heart, Download } from "lucide-react";
 import CommentBox from "./CommentBox";
 
 export default function ModalCard({
@@ -77,10 +77,16 @@ export default function ModalCard({
                                 </div>
                                 {/* Likes and comments */}
                                 <div className="flex items-center justify-between m-1 mt-3">
-                                    <span className="flex gap-2 text-md text-pink-600 items-center">
-                                        <Heart size={17} />
-                                        <p>10K</p>
-                                    </span>
+                                    <div className="flex gap-5 items-center">
+                                        <span className="flex gap-2 text-md text-pink-500 items-center hover:text-pink-500/80 hover:cursor-pointer">
+                                            <Heart size={17} />
+                                            <p>10K</p>
+                                        </span>
+                                        <span className="flex gap-2 text-md text-blue-500 items-center hover:text-blue-500/80 hover:cursor-pointer">
+                                            <Download size={17} />
+                                            <p>Save</p>
+                                        </span>
+                                    </div>
                                     <span className="flex gap-2 text-md text-gray-500 items-center">
                                         <p>Comments</p>
                                         <p>10K</p>
