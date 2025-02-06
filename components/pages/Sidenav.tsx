@@ -11,7 +11,7 @@ import {
     ArrowLeft,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { SignOutButton, useClerk, useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
 
 type sideLinksType = {
@@ -23,6 +23,7 @@ type sideLinksType = {
 
 const Sidenav = () => {
     const { user } = useUser();
+    const { signOut } = useClerk();
     const pathname = usePathname();
     const { openUserProfile } = useClerk();
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -65,14 +66,8 @@ const Sidenav = () => {
         const handleResize = () => {
             setIsCollapsed(window.innerWidth < 640);
         };
-
-        // Initial check
         handleResize();
-
-        // Add event listener
         window.addEventListener("resize", handleResize);
-
-        // Cleanup
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
@@ -163,15 +158,17 @@ const Sidenav = () => {
             </nav>
 
             {/* Footer */}
-            <SignOutButton>
-                <Button
-                    className={`w-full py-5 rounded-lg hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500 ${
-                        isCollapsed ? "px-5" : "px-5"
-                    }`}
-                >
-                    {isCollapsed ? <ArrowLeft className="w-5 h-5" /> : "Logout"}
-                </Button>
-            </SignOutButton>
+            <Button
+                className={`w-full py-5 rounded-lg hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500 ${
+                    isCollapsed ? "px-5" : "px-5"
+                }`}
+                onClick={() => {
+                    router.replace("/");
+                    signOut();
+                }}
+            >
+                {isCollapsed ? <ArrowLeft className="w-5 h-5" /> : "Logout"}
+            </Button>
         </aside>
     );
 };

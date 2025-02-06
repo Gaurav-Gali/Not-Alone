@@ -7,17 +7,8 @@ import MissionItem from "@/components/landingPage/MissionItem";
 import DeveloperCard from "@/components/landingPage/DeveloperCard";
 
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 
 export default function Landing() {
-    const { isSignedIn, isLoaded } = useUser();
-    const router = useRouter();
-    useEffect(() => {
-        if (isSignedIn) router.push("/feed");
-    }, [isSignedIn, isLoaded, router]);
-
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-grow">
