@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import AssistantComp from "@/components/pages/AssistantComp";
 
 const Assistant = () => {
-  return (
-    <div>Assistant</div>
-  )
-}
+    return (
+        <div>
+            <AssistantComp />
+        </div>
+    );
+};
 
-export default Assistant
+export default Assistant;

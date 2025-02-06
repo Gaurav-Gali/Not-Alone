@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,13 +9,10 @@ import {
     Download,
     Settings,
     ArrowLeft,
-    ChevronRight,
-    ChevronLeft,
 } from "lucide-react";
-import CreateModal from "./CreateModal";
 import { Button } from "../ui/button";
-import { SignOutButton, useClerk } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+import { SignOutButton, useClerk, useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 
 type sideLinksType = {
     label: string;
@@ -30,6 +26,7 @@ const Sidenav = () => {
     const pathname = usePathname();
     const { openUserProfile } = useClerk();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const router = useRouter();
 
     const [sideLinks, setSideLinks] = useState<sideLinksType[]>([
         {
@@ -108,15 +105,18 @@ const Sidenav = () => {
 
     return (
         <aside
-            className={`flex flex-col gap-5 h-screen p-7 pt-5 transition-all duration-300 ${
+            className={`flex flex-col gap-5 h-screen p-2 pt-5 transition-all duration-300 ${
                 isCollapsed ? "w-28" : "w-72"
             }`}
         >
             {/* Name Card */}
             <div
-                className={`bg-white rounded-xl border border-neutral-50 p-3 ${
+                className={`bg-white rounded-xl cursor-pointer hover:opacity-[90%] border border-neutral-50 p-3 ${
                     isCollapsed ? "p-1 justify-center" : "px-5 justify-start"
                 } flex items-center  gap-3`}
+                onClick={() => {
+                    router.push("/profile/1");
+                }}
             >
                 <Image
                     className="w-10 h-10 aspect-square rounded-lg flex-shrink-0"
