@@ -15,7 +15,7 @@ const SearchBar = () => {
     const pathname = usePathname();
 
     const routesNoSearch = ["/settings", "/settings/security"];
-    const searchHidden: boolean = routesNoSearch.includes(pathname);
+    routesNoSearch.includes(pathname); // Check if current path should hide search
 
     useEffect(() => {
         if (inputValue) {

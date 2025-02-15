@@ -9,6 +9,7 @@ import DeveloperCard from "@/components/landingPage/DeveloperCard";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function Landing() {
+    const isDBMS = true;
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-grow">
@@ -81,51 +82,53 @@ export default function Landing() {
                     </div>
                 </section>
 
-                <section className="py-20 bg-gray-50">
-                    <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold mb-12 text-center">
-                            Developed By
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <DeveloperCard
-                                name="Gaurav Gali"
-                                role="Web Developer"
-                                image="/landingPage/GauravGali.jpg"
-                                socialLinks={{
-                                    linkedin:
-                                        "https://www.linkedin.com/in/gaurav-gali?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-                                    instagram:
-                                        "https://www.instagram.com/__gg05__?igsh=eDllY2Nod3FlZXM1&utm_source=qr",
-                                    github: "https://github.com/Gaurav-Gali",
-                                }}
-                            />
-                            <DeveloperCard
-                                name="Krishnaa Gopi"
-                                role="Web Developer"
-                                image="/landingPage/Krishnaa.jpg"
-                                socialLinks={{
-                                    linkedin:
-                                        "https://www.linkedin.com/in/krishnaa-gopi-aa340428b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-                                    instagram:
-                                        "https://www.instagram.com/kshnaaaaaaaaa/",
-                                    github: "https://github.com/Krishnaa-Gopi1",
-                                }}
-                            />
-                            <DeveloperCard
-                                name="Vishal ES"
-                                role="Web Developer"
-                                image="/landingPage/Vishal.jpg"
-                                socialLinks={{
-                                    linkedin:
-                                        "https://www.linkedin.com/in/vishal-e-s-129934287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-                                    instagram:
-                                        "https://www.instagram.com/vishal_e_s?igsh=MXB1M213eHFlM2pyag==",
-                                    github: "https://github.com/Vishal3s",
-                                }}
-                            />
+                {!isDBMS && (
+                    <section className="py-20 bg-gray-50">
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-bold mb-12 text-center">
+                                Developed By
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <DeveloperCard
+                                    name="Gaurav Gali"
+                                    role="Web Developer"
+                                    image="/landingPage/GauravGali.jpg"
+                                    socialLinks={{
+                                        linkedin:
+                                            "https://www.linkedin.com/in/gaurav-gali?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+                                        instagram:
+                                            "https://www.instagram.com/__gg05__?igsh=eDllY2Nod3FlZXM1&utm_source=qr",
+                                        github: "https://github.com/Gaurav-Gali",
+                                    }}
+                                />
+                                <DeveloperCard
+                                    name="Krishnaa Gopi"
+                                    role="Web Developer"
+                                    image="/landingPage/Krishnaa.jpg"
+                                    socialLinks={{
+                                        linkedin:
+                                            "https://www.linkedin.com/in/krishnaa-gopi-aa340428b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+                                        instagram:
+                                            "https://www.instagram.com/kshnaaaaaaaaa/",
+                                        github: "https://github.com/Krishnaa-Gopi1",
+                                    }}
+                                />
+                                <DeveloperCard
+                                    name="Vishal ES"
+                                    role="Web Developer"
+                                    image="/landingPage/Vishal.jpg"
+                                    socialLinks={{
+                                        linkedin:
+                                            "https://www.linkedin.com/in/vishal-e-s-129934287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+                                        instagram:
+                                            "https://www.instagram.com/vishal_e_s?igsh=MXB1M213eHFlM2pyag==",
+                                        github: "https://github.com/Vishal3s",
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
             </main>
 
             <footer id="footer" className="bg-gray-900 text-white py-8">
@@ -143,7 +146,7 @@ export default function Landing() {
                     </div>
                     <div className="mt-8 pt-8 border-t border-gray-800 text-center">
                         <p className="text-sm opacity-75">
-                            &copy; 2025 CyberSupport. All rights reserved.
+                            &copy; 2025 Not Alone. All rights reserved.
                         </p>
                     </div>
                 </div>

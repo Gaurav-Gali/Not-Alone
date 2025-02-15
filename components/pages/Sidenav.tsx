@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { usePathname, useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 type sideLinksType = {
     label: string;
@@ -71,17 +72,17 @@ const Sidenav = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    function updatePath() {
+    const updatePath = useCallback(() => {
         const updatedLinks = sideLinks.map((link) => ({
             ...link,
             selected: link.url === pathname,
         }));
         setSideLinks(updatedLinks);
-    }
+    }, [pathname, sideLinks]);
 
     useEffect(() => {
         updatePath();
-    }, [pathname]);
+    }, [pathname, updatePath]);
 
     const renderSideLinks = (index: number) => {
         const updatedLinks = sideLinks.map((link, i) => ({
@@ -126,7 +127,7 @@ const Sidenav = () => {
                             {user?.fullName}
                         </h1>
                         <p className="text-xs text-gray-500">
-                            You're not alone
+                            You&apos;re not alone
                         </p>
                     </span>
                 )}

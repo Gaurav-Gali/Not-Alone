@@ -164,35 +164,36 @@ export const Card = ({
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { onCardClose, currentIndex } = useContext(CarouselContext);
 
-  useEffect(() => {
+const { onCardClose } = useContext(CarouselContext);
+
+useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+    if (event.key === "Escape") {
         handleClose();
-      }
+    }
     }
 
     if (open) {
-      document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto";
+    document.body.style.overflow = "auto";
     }
-
+    
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+}, [open, handleClose]);
 
-  useOutsideClick(containerRef, () => handleClose());
+useOutsideClick(containerRef, () => handleClose());
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    onCardClose(index);
-  };
+const handleClose = useCallback(() => {
+setOpen(false);
+onCardClose(index);
+}, [onCardClose, index]);
 
   return (
     <>

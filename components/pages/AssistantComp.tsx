@@ -1,7 +1,7 @@
 "use client";
 
-import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 import { useState } from "react";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import ChatBox from "./ChatBox";
 
 type chatType = {
@@ -32,7 +32,7 @@ export default function AssistantComp() {
 
         const specifiedInput =
             input +
-            "Make the prompt concise and and relevant to indian scenarios. If any questions are asked which are outside the domain of cybersecurity and cyber crimes and victims experiences please respond with 'this is beyond my knowledge'. also provide the required contact number and helpline numbers of police or cyber crime support if required.";
+            "Ensure the prompt is concise and relevant to Indian cybersecurity scenarios. If queries fall outside the domain of cybersecurity, cyber crimes, or victims' experiences, respond with 'This is beyond my knowledge.' Additionally, provide the necessary helpline numbers for police or cyber crime support when required.";
 
         const res = await fetch("/api/gemini", {
             method: "POST",
