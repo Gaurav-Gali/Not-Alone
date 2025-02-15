@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useCharacterLimit } from "@/hooks/use-character-limit";
 import { useImageUpload } from "@/hooks/use-image-upload";
@@ -129,7 +130,7 @@ function ProfileBg({ defaultImage }: { defaultImage?: string }) {
         <div className="h-32">
             <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-muted">
                 {currentImage && (
-                    <img
+                    <Image
                         className="h-full w-full object-cover"
                         src={currentImage}
                         alt="Profile background"
@@ -176,7 +177,7 @@ function Avatar({ defaultImage }: { defaultImage?: string }) {
         <div className="-mt-10 px-6">
             <div className="relative flex size-20 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-muted shadow-sm">
                 {defaultImage ? (
-                    <img
+                    <Image
                         src={defaultImage}
                         className="h-full w-full object-cover"
                         width={80}
