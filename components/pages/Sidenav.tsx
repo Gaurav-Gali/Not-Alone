@@ -78,11 +78,12 @@ const Sidenav = () => {
             selected: link.url === pathname,
         }));
         setSideLinks(updatedLinks);
-    }, [pathname, sideLinks]);
+    }, [pathname]);
 
     useEffect(() => {
         updatePath();
     }, [pathname, updatePath]);
+
 
     const renderSideLinks = (index: number) => {
         const updatedLinks = sideLinks.map((link, i) => ({
