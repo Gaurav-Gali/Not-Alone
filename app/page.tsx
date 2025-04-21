@@ -9,7 +9,7 @@ import DeveloperCard from "@/components/landingPage/DeveloperCard";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function Landing() {
-    const isDBMS = true;
+    const isDBMS = !true;
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-grow">

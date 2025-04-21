@@ -25,31 +25,47 @@ export default function AssistantComp() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
     };
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        setLoading(true);
         e.preventDefault();
-        console.log("Inside console");
 
-        const specifiedInput =
-            input +
-            "Ensure the prompt is concise and relevant to Indian cybersecurity scenarios. If queries fall outside the domain of cybersecurity, cyber crimes, or victims' experiences, respond with 'This is beyond my knowledge.' Additionally, provide the necessary helpline numbers for police or cyber crime support when required.";
+        // Prevent empty submissions and duplicate submissions
+        if (!input.trim() || loading) return;
 
-        const res = await fetch("/api/gemini", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: specifiedInput }),
-        });
+        setLoading(true);
+        const userInput = input;
 
-        const data = await res.json();
-        const newData =
-            data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+        try {
+            const specifiedInput =
+                userInput +
+                "Ensure the prompt is concise and relevant to Indian cybersecurity scenarios. If queries fall outside the domain of cybersecurity, cyber crimes, or victims' experiences, respond with 'This is beyond my knowledge.' Additionally, provide the necessary helpline numbers for police or cyber crime support when required.";
 
-        setChats((prev) => [
-            ...prev,
-            { user: input, ai: removeMarkdown(newData) },
-        ]);
-        setInput("");
-        setLoading(false);
+            const res = await fetch("/api/gemini", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: specifiedInput }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const data = await res.json();
+            const newData =
+                data.candidates?.[0]?.content?.parts?.[0]?.text ||
+                "No response";
+
+            setChats((prev) => [
+                ...prev,
+                { user: userInput, ai: removeMarkdown(newData) },
+            ]);
+        } catch (error) {
+            console.error("Error:", error);
+            // Optionally show error to user
+        } finally {
+            setInput("");
+            setLoading(false);
+        }
     };
 
     function removeMarkdown(text: string) {
@@ -67,6 +83,7 @@ export default function AssistantComp() {
             .replace(/\s{2,}/g, " ")
             .trim();
     }
+
     return (
         <div className="flex flex-col justify-center h-screen items-center px-4 py-5">
             <div className="w-full flex flex-col items-center justify-center border-0 border-b-[0.5px] border-b-gray-200 pb-5 m-5">
@@ -77,6 +94,7 @@ export default function AssistantComp() {
                     placeholders={placeholders}
                     onChange={handleChange}
                     onSubmit={onSubmit}
+                    // disabled={loading}
                 />
             </div>
             {/* Thinking */}

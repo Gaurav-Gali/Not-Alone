@@ -23,7 +23,7 @@ const NewsPage = () => {
   const fetchNews = async (topic: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/get_news/${topic}`);
+      const res = await fetch(`https://notalonebackend-cou6.onrender.com/api/get_news/${topic}`);
       const data = await res.json();
       if (data.articles) {
         setArticles(data.articles);
