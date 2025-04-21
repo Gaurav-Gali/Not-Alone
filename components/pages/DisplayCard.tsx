@@ -16,7 +16,7 @@ export default function DisplayCard({
 }) {
     return (
         <div className="max-w-xs w-full group/card">
-            <div className="cursor-pointer overflow-hidden relative card h-96 rounded-xl shadow-sm max-w-sm mx-auto flex flex-col justify-between p-4">
+            <div className="cursor-pointer overflow-hidden relative card h-72 rounded-xl shadow-sm max-w-sm mx-auto flex flex-col justify-between p-4">
                 {/* Background Image */}
                 <Image
                     src={image}
