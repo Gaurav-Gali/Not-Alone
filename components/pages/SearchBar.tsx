@@ -29,8 +29,8 @@ const SearchBar = () => {
     }, [inputValue]);
 
     return (
-        <div className={"flex gap-3 items-center pr-7"}>
-            <div className="relative flex-1">
+        <div className={"flex gap-3 items-center justify-end pr-7"}>
+            {/* <div className="relative flex-1">
                 <Input
                     id={id}
                     className="peer pe-9 ps-9 h-10 text-gray-600 rounded-full shadow-none border focus-visible:ring-1 focus-visible:ring-gray-300"
@@ -59,7 +59,7 @@ const SearchBar = () => {
                 >
                     <Mic size={16} strokeWidth={2} aria-hidden="true" />
                 </button>
-            </div>
+            </div> */}
             <CreateModal>
                 <Button className="w-full flex gap-1 items-center py-3 rounded-full hover:opacity-[95%] border-neutral-50 bg-gradient-to-r from-blue-500 to-indigo-500">
                     <BadgePlus className="w-4" /> Create

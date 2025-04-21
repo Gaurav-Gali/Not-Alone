@@ -1,22 +1,20 @@
 "use client";
 
-import { useState, FormEvent, ChangeEvent, useEffect, useRef } from "react";
+import { useState } from "react";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import ChatBox from "./ChatBox";
-import ReactMarkdown from "react-markdown";
 
-interface ChatType {
+type chatType = {
     user: string;
     ai: string;
-}
+};
 
 export default function AssistantComp() {
-    const [chats, setChats] = useState<ChatType[]>([]);
+    const [chats, setChats] = useState<chatType[]>([]);
     const [input, setInput] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const loadingRef = useRef<HTMLDivElement>(null);
 
-    const placeholders: string[] = [
+    const placeholders = [
         "What is phishing, and how can you protect yourself?",
         "What are the common signs of a ransomware attack?",
         "How do hackers perform social engineering attacks?",
@@ -24,72 +22,71 @@ export default function AssistantComp() {
         "How can you secure your personal data from cybercriminals?",
     ];
 
-    useEffect(() => {
-        // Scroll to loading indicator when it appears
-        if (loading && loadingRef.current) {
-            loadingRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [loading]);
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
     };
 
-    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // Prevent empty submissions and duplicate submissions
         if (!input.trim() || loading) return;
 
-        // Add user message immediately
-        setChats((prev) => [...prev, { user: input, ai: "" }]);
         setLoading(true);
-
-        const prompt = `${input} Ensure the prompt is concise and relevant to Indian cybersecurity scenarios. If queries fall outside the domain of cybersecurity, cyber crimes, or victims' experiences, respond with 'This is beyond my knowledge.' Additionally, provide the necessary helpline numbers for police or cyber crime support when required.`;
+        const userInput = input;
 
         try {
+            const specifiedInput =
+                userInput +
+                "Ensure the prompt is concise and relevant to Indian cybersecurity scenarios. If queries fall outside the domain of cybersecurity, cyber crimes, or victims' experiences, respond with 'This is beyond my knowledge.' Additionally, provide the necessary helpline numbers for police or cyber crime support when required.";
+
             const res = await fetch("/api/gemini", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ prompt }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: specifiedInput }),
             });
 
-            if (!res.ok) throw new Error("Failed to fetch response");
+            if (!res.ok) {
+                throw new Error("Network response was not ok");
+            }
 
             const data = await res.json();
-            const aiResponse =
-                data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+            const newData =
+                data.candidates?.[0]?.content?.parts?.[0]?.text ||
                 "No response";
 
-            // Update the last chat with AI response
-            setChats((prev) => {
-                const newChats = [...prev];
-                if (newChats.length > 0) {
-                    // Update the last message's AI response
-                    newChats[newChats.length - 1].ai = aiResponse;
-                }
-                return newChats;
-            });
+            setChats((prev) => [
+                ...prev,
+                { user: userInput, ai: removeMarkdown(newData) },
+            ]);
         } catch (error) {
-            console.error("Error fetching AI response:", error);
-            // Update the last chat with error message
-            setChats((prev) => {
-                const newChats = [...prev];
-                if (newChats.length > 0) {
-                    newChats[newChats.length - 1].ai =
-                        "⚠️ Something went wrong. Please try again.";
-                }
-                return newChats;
-            });
+            console.error("Error:", error);
+            // Optionally show error to user
         } finally {
             setInput("");
             setLoading(false);
         }
     };
 
+    function removeMarkdown(text: string) {
+        return text
+            .replace(/^#{1,6}\s*/gm, "")
+            .replace(/(\*\*|__)(.*?)\1/g, "$2")
+            .replace(/(\*|_)(.*?)\1/g, "$2")
+            .replace(/`([^`]+)`/g, "$1")
+            .replace(/```[\s\S]*?```/g, "")
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+            .replace(/!\[.*?\]\(.*?\)/g, "")
+            .replace(/^>\s*/gm, "")
+            .replace(/^[-*+]\s+/gm, "")
+            .replace(/^\d+\.\s+/gm, "")
+            .replace(/\s{2,}/g, " ")
+            .trim();
+    }
+
     return (
         <div className="flex flex-col justify-center h-screen items-center px-4 py-5">
-            <div className="w-full flex flex-col items-center justify-center border-b border-gray-200 pb-5 m-5">
+            <div className="w-full flex flex-col items-center justify-center border-0 border-b-[0.5px] border-b-gray-200 pb-5 m-5">
                 <h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
                     Ask Assistant
                 </h2>
@@ -97,65 +94,28 @@ export default function AssistantComp() {
                     placeholders={placeholders}
                     onChange={handleChange}
                     onSubmit={onSubmit}
+                    // disabled={loading}
                 />
             </div>
-
-            <div className="w-full flex-1 overflow-y-auto">
-                {chats.length > 0 ? (
-                    <div className="space-y-4 w-full">
-                        {chats.map((chat, index) => (
-                            <div key={index} className="space-y-2">
-                                <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
-                                    <p className="font-medium">You:</p>
-                                    <p>{chat.user}</p>
-                                </div>
-                                {chat.ai ? (
-                                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                                        <p className="font-medium">
-                                            Assistant:
-                                        </p>
-                                        <div className="prose dark:prose-invert max-w-none">
-                                            <ReactMarkdown>
-                                                {chat.ai}
-                                            </ReactMarkdown>
-                                        </div>
-                                    </div>
-                                ) : index === chats.length - 1 && loading ? (
-                                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                                        <p className="font-medium">
-                                            Assistant:
-                                        </p>
-                                        <div className="flex items-center gap-2 pt-2">
-                                            <div className="animate-bounce h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"></div>
-                                            <div
-                                                className="animate-bounce h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"
-                                                style={{
-                                                    animationDelay: "0.2s",
-                                                }}
-                                            ></div>
-                                            <div
-                                                className="animate-bounce h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"
-                                                style={{
-                                                    animationDelay: "0.4s",
-                                                }}
-                                            ></div>
-                                        </div>
-                                    </div>
-                                ) : null}
-                            </div>
-                        ))}
+            {/* Thinking */}
+            {loading && (
+                <div className="flex flex-auto justify-center gap-3 items-center p-4 md:p-5">
+                    <div className="flex justify-center">
+                        <div className="animate-spin inline-block size-5 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500">
+                            <span className="sr-only">Loading...</span>
+                        </div>
                     </div>
-                ) : (
-                    <div className="w-full flex-1 flex justify-center items-center">
-                        <p className="text-gray-500">
-                            No messages yet. Ask Assistant
-                        </p>
-                    </div>
-                )}
-
-                {/* Loading indicator reference point */}
-                <div ref={loadingRef} className="h-1"></div>
-            </div>
+                </div>
+            )}
+            {chats.length > 0 ? (
+                <div className="w-full flex-1 overflow-y-auto">
+                    <ChatBox chats={chats} />
+                </div>
+            ) : (
+                <div className="w-full flex flex-1 justify-center overflow-y-auto">
+                    {!loading && "No messages yet. Ask Assistant"}
+                </div>
+            )}
         </div>
     );
 }
