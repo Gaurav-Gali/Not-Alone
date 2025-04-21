@@ -26,7 +26,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       const timer = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timer);
     }
-    setIsLoading(false);
+    setIsLoading(false);``
   }, [inputValue]);
 
   const handleSearch = () => {
