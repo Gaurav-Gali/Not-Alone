@@ -1,45 +1,69 @@
-"use client"
-import React, { useEffect, useState } from "react";
-import NewsCard from "@/components/pages/NewsCard";
+"use client";
 
+import React, { useEffect, useState } from "react";
+import NewSearch from "@/components/pages/NewSearch";// adjust this import
+import NewsCard from "@/components/pages/NewsCard";   // adjust this import
 
 type Article = {
-    title: string;
-    summary: string;
-    link: string;
+  title: string;
+  summary: string;
+  site?: string;
+  url: string;
 };
 
+const NewsPage = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const News = () => {
-    const [newsData, setNewsData] = useState<Article[]>([]);
+  // fetch all news on mount (default topic = "cyber")
+  useEffect(() => {
+    fetchNews("cyber");
+  }, []);
 
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                const response = await fetch("http://localhost:8000/api/get_news/");
-                const data = await response.json();
-                setNewsData(data.articles); // assuming your Django API returns { articles: [...] }
-            } catch (error) {
-                console.error("Failed to fetch news:", error);
-            }
-        };
+  const fetchNews = async (topic: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:8000/api/get_news/${topic}`);
+      const data = await res.json();
+      if (data.articles) {
+        setArticles(data.articles);
+      } else {
+        setArticles([]);
+      }
+    } catch (err) {
+      console.error("Error fetching news:", err);
+      setArticles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        fetchNews();
-    }, []);
+  const handleSearch = (topic: string) => {
+    fetchNews(topic);
+  };
 
-    return (
-        <div className="flex  justify-around flex-wrap gap-4 ">
-            {newsData.map((cardData, index) => (
-                <NewsCard
-                    key={index}
-                    title={cardData.title}
-                    summary={cardData.summary}
-                    site={new URL(cardData.link).hostname}
-                    url={cardData.link}
-                />
-            ))}
+  return (
+    <div className="p-6">
+      <NewSearch onSearch={handleSearch} />
+      {loading ? (
+        <p className="text-center mt-10">Loading...</p>
+      ) : articles.length === 0 ? (
+        <p className="text-center mt-10">No articles found.</p>
+      ) : (
+        <div className="flex justify-around flex-wrap gap-3 ">
+          {articles.map((article, idx) => (
+            <NewsCard
+              key={idx}
+              title={article.title}
+              summary={article.summary}
+              site={article.site || "Unknown"}
+              url={article.url}
+            />
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
-export default News;
+export default NewsPage;
