@@ -1,10 +1,10 @@
 import React from "react";
-import AssistantComp from "@/components/pages/AssistantComp";
+// import AssistantComp from "@/components/pages/AssistantComp";
 
 const Assistant = () => {
     return (
         <div>
-            <AssistantComp />
+            {/* <AssistantComp /> */}
         </div>
     );
 };

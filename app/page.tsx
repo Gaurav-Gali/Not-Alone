@@ -1,15 +1,27 @@
 "use client";
 
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
-import type React from "react";
 import Image from "next/image";
 import MissionItem from "@/components/landingPage/MissionItem";
 import DeveloperCard from "@/components/landingPage/DeveloperCard";
-
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function Landing() {
     const isDBMS = !true;
+
+    const { isSignedIn } = useUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isSignedIn) {
+            router.push("/feed");
+        }
+    }, [isSignedIn, router]);
+
     return (
         <div className="flex flex-col min-h-screen">
             <main className="flex-grow">

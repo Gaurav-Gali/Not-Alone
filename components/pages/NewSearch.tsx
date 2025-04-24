@@ -3,7 +3,7 @@
 import React, { useEffect, useId, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { LoaderCircle, Mic, Search, BadgePlus } from "lucide-react";
+import { LoaderCircle, Search } from "lucide-react";
 
 
 type SearchBarProps = {
